@@ -1,0 +1,146 @@
+@startuml
+
+class Document{
+    ~_propsToSave
+    -_id
+    -_collection
+    -_provider
+    +getId()
+    +getCollection()
+    +setCollection(collection)
+    +__str__()
+    +__iter__()
+    ~__generateId()
+}
+
+class User <<Document>> {
+    ~_propsToSave
+    -_secname
+    -_firstname
+    -_patronym
+    -_adress
+    -_phone
+    +getSecname()
+    +getFirstname()
+    +getPatronym()
+    +getAdress()
+    +getPhone()
+    +setSecname(secname)
+    +setFirstname(firstname)
+    +setPatronym(patronym)
+    +setAdress(adress)
+    +setPhone(phone)
+}
+
+class Hotel <<Document>> {
+    ~_propsToSave
+    -_name
+    -_cost
+    -_country
+    +getName()
+    +getCost()
+    +getCountry()
+    +setName(name)
+    +setCost(cost)
+    +setCountry(country)
+}
+
+class Route <<Document>> {
+    ~_propsToSave
+    -_duration
+    -_hotelID
+    -_climate
+    +getDuration()
+    +getHotelID()
+    +getClimate()
+    +getHotel()
+    +setDuration(duration)
+    +setClimate(climate)
+    +setHotel(hotel)
+}
+
+class Voucher <<Document>> {
+    ~_propsToSave
+    -_routeID
+    -_userID
+    -_departureDate
+    -_count
+    +getRouteID()
+    +getUserID()
+    +getDepartureDate()
+    +getCount()
+    +getUser()
+    +getRoute()
+    +getDiscount()
+    +getCost()
+    +setRoute(route)
+    +setUser(user)
+    +setDepartureDate(departureDate)
+    +setCount(count)
+}
+
+class Collection {
+    -_provider
+    -_itemClass
+    -_name
+    +getItemClass()
+    +getName()
+    +getProvider()
+    +map(fn)
+    +find(fn)
+    +filter(fn)
+    +getIdList()
+    +findById(id)
+    +deleteById(id)
+    +append(item)
+    +clear()
+    +__str__()
+    +getDictsList()
+}
+
+class Provider {
+    -_models
+    -_collections
+    +getModels()
+    +getModel(modelName)
+    +getCollection(name)
+    +findItem(collectionName, itemId)
+    +appendItem(collectionName, item)
+    +removeItem(collectionName, itemId)
+    +load(): pass
+    +save(): pass
+}
+
+class JSONProvider <<Provider>> {
+    -_readFile
+    -_writeFile
+    +load()
+    +save()
+}
+
+class SQLiteProvider <<Provider>> {
+    -_connection
+    -_cursor
+    +removeItem(collectionName, itemId)
+    +save()
+    +load()
+    -__get_table(tablename)
+    -__post_row(tablename, itemDict)
+    -__remove_row(tablename, id)
+}
+
+SQLiteProvider <|-- Provider
+JSONProvider <|-- Provider
+Provider *-- Collection
+Collection *-- Document
+
+User <|-- Document
+Route <|-- Document
+Hotel <|-- Document
+Voucher <|-- Document
+
+Voucher o-- User
+Voucher o-- Route
+Route o-- Hotel
+Voucher o-- Hotel
+@enduml
